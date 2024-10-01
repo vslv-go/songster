@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:14.5-alpine
+    container_name: songster_postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      PGSSLMODE: disable
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: songster
+    volumes:
+      - songster-pg-data:/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+
+volumes:
+  songster-pg-data:
+    driver: local

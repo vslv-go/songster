@@ -1,0 +1,210 @@
+basePath: /api/v1
+definitions:
+  handlers.AddSongRequest:
+    properties:
+      group:
+        type: string
+      song:
+        type: string
+    type: object
+  handlers.Couplet:
+    properties:
+      id:
+        type: integer
+      song_id:
+        type: integer
+      text:
+        type: string
+    type: object
+  handlers.Song:
+    properties:
+      band:
+        type: string
+      id:
+        type: integer
+      link:
+        type: string
+      release_date:
+        example: 02.01.2006
+        type: string
+      song:
+        type: string
+    type: object
+  handlers.SongCoupletsResponse:
+    properties:
+      couplets:
+        items:
+          $ref: '#/definitions/handlers.Couplet'
+        type: array
+      song:
+        $ref: '#/definitions/handlers.Song'
+      total:
+        type: integer
+    type: object
+  handlers.SongResponse:
+    properties:
+      song:
+        $ref: '#/definitions/handlers.Song'
+    type: object
+  handlers.SongsResponse:
+    properties:
+      songs:
+        items:
+          $ref: '#/definitions/handlers.Song'
+        type: array
+      total:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample API
+  title: Songster API
+  version: "1.0"
+paths:
+  /songs:
+    get:
+      description: Get list of songs
+      parameters:
+      - in: query
+        name: band
+        type: string
+      - example: 02.01.2006-02.01.2007
+        in: query
+        name: dates
+        type: string
+      - in: query
+        name: link
+        type: string
+      - in: query
+        name: song
+        type: string
+      - description: Number of page
+        in: query
+        name: page
+        type: integer
+      - description: Songs per page
+        in: query
+        name: count
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SongsResponse'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Songs list
+      tags:
+      - Songs
+    post:
+      consumes:
+      - application/json
+      description: Add song data
+      parameters:
+      - description: Song params
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AddSongRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SongResponse'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Add song
+      tags:
+      - Songs
+  /songs/{id}:
+    delete:
+      description: Delete song
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Delete song
+      tags:
+      - Songs
+    get:
+      description: Get song couplets
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Number of page
+        in: query
+        name: page
+        type: integer
+      - description: Couplets per page
+        in: query
+        name: count
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SongCoupletsResponse'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Song couplets
+      tags:
+      - Songs
+    put:
+      consumes:
+      - application/json
+      description: Update song data
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Song params
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.Song'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SongResponse'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update song
+      tags:
+      - Songs
+swagger: "2.0"
